@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>지구를 살리는 적정기술 미니 챌린지</title>
+<style>
+:root{--bg:#effaf1;--card:#fff;--tx:#1d3b2b;--mut:#5b7a68;--pri:#2e9e5b;--blue:#2d7fd3;--yel:#ffd45e;--bd:#cfe8d6;--bad:#e5484d;--good:#2e9e5b;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#10201a;--card:#1a2f26;--tx:#e6f4ea;--mut:#9dbcaa;--bd:#2c4a3b;--yel:#c99a1e}}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at 10% 10%,rgba(255,212,94,.35),transparent 40%),radial-gradient(circle at 90% 20%,rgba(45,127,211,.25),transparent 40%),var(--bg);background-attachment:fixed;color:var(--tx);font-family:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;min-height:100vh}
+header{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;padding:12px 16px;background:linear-gradient(90deg,var(--pri),var(--blue));color:#fff}
+h1{font-size:clamp(16px,4.5vw,24px);margin:0}
+main{max-width:720px;margin:0 auto;padding:14px}
+.scr{display:none;background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:16px}
+.scr.on{display:block}
+button{font:inherit;cursor:pointer;border:0;border-radius:12px;padding:10px 16px;background:var(--pri);color:#fff;font-weight:700}
+button.g{background:var(--bd);color:var(--tx)}
+button:disabled{opacity:.6}
+input{font:inherit;padding:10px;border-radius:10px;border:2px solid var(--bd);background:var(--bg);color:var(--tx);width:100%;margin:8px 0}
+#cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.card{background:var(--bg);border:2px solid var(--bd);border-radius:14px;padding:12px;text-align:left;color:var(--tx);font-weight:400}
+.card b{display:block;font-size:17px}
+.card small{color:var(--mut)}
+.card.done{border-color:var(--good)}
+canvas{width:100%;max-width:640px;display:block;margin:8px auto;border-radius:12px;touch-action:none;border:2px solid var(--bd);background:#eaf6ff}
+.opt{display:block;width:100%;text-align:left;margin:8px 0;background:var(--bg);color:var(--tx);border:2px solid var(--bd)}
+.opt.good{background:var(--good);color:#fff}.opt.bad{background:var(--bad);color:#fff}
+.q{font-size:18px;font-weight:700}
+.box{background:var(--bg);border-left:5px solid var(--yel);padding:10px 12px;border-radius:8px;line-height:1.6;margin:8px 0}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{padding:7px 5px;border-bottom:1px solid var(--bd);text-align:center}
+.tw{overflow-x:auto}
+#cf{position:fixed;inset:0;pointer-events:none;z-index:9}
+.mut{color:var(--mut)}
+@keyframes pop{from{opacity:0;transform:translateY(14px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes fl{50%{transform:translateY(-6px)}}
+@keyframes bgm{50%{background-position:100% 0}}
+.scr.on{animation:pop .35s ease}
+.scr{box-shadow:0 8px 24px rgba(0,0,0,.08)}
+header{background-size:200% 100%;animation:bgm 8s ease infinite;box-shadow:0 4px 14px rgba(0,0,0,.2)}
+h1{text-shadow:0 2px 0 rgba(0,0,0,.2)}
+button{box-shadow:0 4px 0 rgba(0,0,0,.18);transition:transform .1s}
+button:hover{transform:translateY(-2px)}
+button:active{transform:translateY(2px);box-shadow:none}
+.card{border-top-width:6px;transition:transform .15s}
+.card:hover{transform:translateY(-4px) rotate(-1deg)}
+.card .ic{font-size:46px;display:block;animation:fl 2.4s ease-in-out infinite}
+.card:nth-child(1){border-top-color:#2d7fd3}.card:nth-child(2){border-top-color:#2e9e5b}.card:nth-child(3){border-top-color:#9b5de5}.card:nth-child(4){border-top-color:#00b4d8}.card:nth-child(5){border-top-color:#f4a261}
+textarea{font:inherit;padding:8px;border-radius:10px;border:2px solid var(--bd);background:var(--bg);color:var(--tx);margin:6px 0}
+</style></head><body>
+<canvas id="cf" style="border:0;background:none;max-width:none;margin:0;border-radius:0"></canvas>
+<header><h1>🌱 지구를 살리는 적정기술 미니 챌린지</h1><div><span id="st" style="font-size:13px">⏳ 연결 확인 중</span> <span id="who"></span> <button id="tbtn" class="g" hidden="">👩‍🏫 교사 화면</button></div></header>
+<main>
+<section id="login" class="scr on"><h2>👋 참가자 등록</h2><p class="mut">학번과 이름을 입력하세요. (예: 10305 김하나) 같은 이름으로 다시 접속하면 이어서 합니다.</p><input id="cc" maxlength="12" placeholder="수업 코드 (선생님이 알려주는 코드)"><input id="nm" maxlength="20" placeholder="학번 이름"><button id="lg">시작하기</button></section>
+<section id="menu" class="scr"><h2>🎮 게임을 골라 도전하세요</h2><div id="cards"></div><p id="tot" class="q"></p></section>
+<section id="intro" class="scr"><h2 id="it"></h2><div class="box" id="ii"></div><button id="go">▶ 게임 시작</button> <button class="g" id="bk1">돌아가기</button></section>
+<section id="play" class="scr"><p id="hint" class="q"></p><canvas id="cv" width="480" height="320"></canvas><button class="g" id="bk2">그만하기</button></section>
+<section id="quiz" class="scr"></section>
+<section id="teacher" class="scr"><h2>🏆 교사 화면 · 종합 순위</h2><p class="mut">합계 = 게임 점수 + 퀴즈 정답 1개당 20점 (실시간 갱신)</p><div class="box" id="fm"><b>📊 구글 폼 연동</b><input id="fl" placeholder="구글 폼의 '미리 채워진 링크'를 붙여넣으세요" style="font-size:12px"><button id="fs">연동 저장</button> <button id="fd" class="g">📥 학생용 파일 만들기</button><p id="fmsg" class="mut"></p></div><div class="box" id="cs" hidden=""><b>📄 응답 시트 불러오기</b><p class="mut">구글 시트 → 파일 → 공유 → 웹에 게시 → 응답 시트·CSV 형식으로 게시한 뒤 주소를 붙여넣으면 10초마다 자동 갱신됩니다. 게시가 막혀 있으면 시트를 CSV로 다운로드해 파일로 선택하세요.</p><input id="cu" placeholder="게시된 CSV 주소 (https://docs.google.com/spreadsheets/d/e/.../pub?output=csv)" style="font-size:12px"><button id="cb">불러오기</button> <label class="mut">또는 CSV 파일 선택 <input type="file" id="cf2" accept=".csv,text/csv" style="width:auto"></label><p id="cm" class="mut"></p></div><div id="cp" hidden=""><p class="mut">학생들이 처음 화면에서 이 수업 코드를 입력하면 이 표에 자동 집계됩니다.</p><div id="big" style="font-size:44px;font-weight:900;letter-spacing:8px;text-align:center"></div><input id="tc" maxlength="12" placeholder="수업 코드 (영문·숫자)" style="width:auto"> <button id="nc">🎲 새 코드 만들기</button> <button id="sc" class="g">이 코드로 보기</button></div><div class="tw" id="tb"></div><div id="imp" hidden=""><h3>📥 학생 결과 코드 붙여넣기</h3><p class="mut">학생이 퀴즈 후 보여주는 결과 코드를 줄바꿈으로 구분해 붙여넣으면 순위에 반영됩니다. 같은 기기에서 한 결과는 자동 포함됩니다.</p><textarea id="cd" rows="4" style="width:100%"></textarea><button id="ad">순위에 반영</button></div><button class="g" id="bk3">돌아가기</button></section>
+</main>
+<script>
+/* ★ 구글 폼 연동: 따옴표 안에 '미리 채워진 링크' 전체를 넣어 주세요. 예) const FORM_LINK="https://docs.google.com/forms/d/e/.../viewform?usp=pp_url&entry.1=a&..."; */
+const SRC=document.documentElement.outerHTML;
+const FORM_LINK="https://docs.google.com/forms/d/e/1FAIpQLSfoaByaeRrcdXhVB-EWFAbzToNytT1_C5tsHOs5i6pLAImQ0w/viewform?usp=pp_url&entry.304084057=1&entry.2018729472=1&entry.1076786821=1&entry.1516027980=1&entry.84366042=1&entry.256964051=1&entry.1007736323=1&entry.1928571072=1&entry.2098947135=1";const FL=()=>FORM_LINK||ls("at_form")||"";
+const W=480,H=320,$=i=>document.getElementById(i);
+const GM=[
+{id:"bici",n:"🚴 바이슬아바도라",s:"자전거 세탁",h:"화면을 터치·클릭하거나 SPACE를 연타해 페달을 밟으세요! 손을 떼면 속도가 줄어요.",i:"<b>왜 만들었나?</b> 전기가 부족한 지역에서는 빨래가 오래 걸리고 힘든 노동이었어요.<br><b>원리:</b> 자전거 페달을 밟는 사람의 힘(운동 에너지)으로 세탁기 드럼을 돌려요. 전기가 필요 없어요.<br><b>이점:</b> 전기료 0원, 시간과 노동 절약, 환경 오염 감소."},
+{id:"sock",n:"⚽ 소켓",s:"축구공 발전",h:"공이 노란 구역에 내려올 때 터치·클릭(SPACE)! 연속 성공하면 충전이 빨라져요.",i:"<b>왜 만들었나?</b> 전기가 없는 마을에서는 밤에 공부하거나 일하기 어려워요.<br><b>원리:</b> 공을 차고 놀 때 생기는 흔들림(운동 에너지)을 공 속 발전 장치가 전기 에너지로 바꿔 배터리에 저장하고, LED 램프를 켜요.<br><b>이점:</b> 놀면서 충전, 연료비 없음."},
+{id:"ads",n:"👓 어드스펙스",s:"액체 안경",h:"화면을 좌우로 드래그해 주사기를 움직이고, 가장 선명해지는 곳에서 2초간 유지하세요! (3명)",i:"<b>왜 만들었나?</b> 안경점과 검사 장비가 멀고 비싸서 안경을 못 쓰는 사람이 많았어요.<br><b>원리:</b> 안경테의 주사기로 렌즈 속 액체(실리콘 오일) 양을 조절하면 렌즈가 볼록해지는 정도(굴절)가 바뀌어 초점이 맞아요.<br><b>이점:</b> 전문가 없이 스스로 도수 맞춤."},
+{id:"warka",n:"💧 와카워터",s:"이슬 수집",h:"화면을 좌우로 움직여 그물망으로 💧를 받으세요. 🟤 먼지는 피하세요! 목표 100L",i:"<b>왜 만들었나?</b> 에티오피아 등 물이 부족한 지역은 먼 곳까지 물을 길어 와야 했어요.<br><b>원리:</b> 일교차가 클 때 밤에 차가워진 그물망에 공기 중 수증기가 응결해 물방울이 되고, 흘러내려 모여요.<br><b>이점:</b> 대나무 등 지역 재료, 전기 없이 식수 확보."},
+{id:"stack",n:"🧱 페트병 담 & 흙 부대 집",s:"친환경 건축",h:"좌우로 움직이는 블록을 터치·클릭(SPACE)해 떨어뜨려 8층 벽을 쌓으세요. 하트 3개!",i:"<b>왜 만들었나?</b> 집을 지을 돈과 재료가 부족하고, 버려지는 쓰레기는 늘어나고 있어요.<br><b>원리:</b> 버려진 페트병이나 흙 부대에 흙·모래를 채워 벽돌처럼 쌓으면 튼튼하고 열이 잘 오가지 않는(단열) 벽이 돼요.<br><b>이점:</b> 쓰레기 재활용, 저렴한 비용, 여름엔 시원하고 겨울엔 따뜻함."}];
+/* 퀴즈: [문제, 정답, 오답1, 오답2, 오답3] (보기는 무작위로 섞임) */
+const Q={
+bici:[["바이슬아바도라는 어떤 힘으로 세탁기를 돌리나요?","사람이 페달을 밟는 힘","전기 콘센트","태양광 패널","석유 엔진"],["바이슬아바도라를 만든 가장 큰 목적은?","전기가 부족한 곳에서 전기 없이 빨래하기","옷을 더 빨리 낡게 하기","전기 사용량 늘리기","운동 선수 육성"],["페달을 더 빠르게 밟으면 드럼은?","더 빨리 돈다","느리게 돈다","멈춘다","반대로 돈다"],["이 기술에서 에너지는 어떻게 쓰이나요?","페달의 운동 에너지가 드럼을 돌리는 운동 에너지로 전달","빛 에너지가 열이 됨","화학 에너지가 소리가 됨","핵에너지가 전기가 됨"],["적정기술의 특징으로 알맞은 것은?","지역 환경과 경제 사정에 맞는 쉽고 저렴한 기술","가장 비싸고 복잡한 첨단 기술","전문가만 쓸 수 있는 기술","대기업만 만들 수 있는 기술"]],
+sock:[["소켓은 어떤 에너지를 전기 에너지로 바꾸나요?","공을 차며 생기는 운동 에너지","태양의 빛 에너지","바람의 힘","석탄의 열"],["소켓의 목적으로 알맞은 것은?","놀면서 충전해 전기 없는 곳에서 LED 조명 사용","축구 경기 승패 가리기","공을 더 무겁게 만들기","소리를 크게 내기"],["공 속에서 전기를 만드는 장치는?","흔들림으로 전기를 만드는 발전 장치","태양전지판","연료 탱크","인터넷 모뎀"],["소켓에 모은 전기는 주로 어디에 쓰나요?","LED 램프 켜기","비행기 운항","대형 에어컨 가동","도로 포장"],["소켓의 에너지 전환 순서는?","운동 에너지 → 전기 에너지 → 빛 에너지","빛 → 열 → 운동","화학 → 열 → 소리","전기 → 운동 → 소리"]],
+ads:[["어드스펙스는 무엇을 조절해 도수를 맞추나요?","렌즈 속 액체의 양","전지의 개수","거울의 각도","코받침 높이"],["어드스펙스의 목적은?","안경점이 없거나 비싼 곳에서 스스로 도수에 맞는 안경 쓰기","멋을 내기 위한 장식","자외선만 차단하기","눈 색깔 바꾸기"],["렌즈 속 액체의 양이 달라지면 렌즈는?","볼록한 정도가 바뀌어 빛의 굴절이 달라진다","색이 변한다","무게만 변한다","아무 변화 없다"],["어드스펙스의 장점은?","검사 장비·전문가 없이 쓰는 사람이 직접 조절","항상 전문가가 필요","전기가 꼭 필요","한 번 쓰고 버림"],["안경으로 시력을 교정하면 좋은 점은?","학습과 일의 능률이 높아진다","귀가 커진다","소리가 잘 들린다","냄새를 잘 맡는다"]],
+warka:[["와카워터는 무엇을 모아 물을 얻나요?","공기 중 수증기가 맺힌 물방울","땅속 지하수","바닷물","수돗물"],["와카워터가 특히 도움이 되는 곳은?","물이 부족한 지역의 식수 확보","사막 스키장","발전소","공항"],["이슬이 맺히는 현상의 과학 원리는?","응결 (수증기가 차가운 곳에서 물방울이 됨)","증발","연소","승화"],["와카워터 탑의 특징은?","대나무 등 지역 재료와 그물망을 사용","철강과 콘크리트로만 제작","전기 펌프가 필수","유리로 된 건물"],["일교차가 큰 곳에서 잘 작동하는 이유는?","밤에 차가워진 그물에 수증기가 잘 맺혀서","낮에 가장 잘 마르니까","바람이 전혀 없어야 해서","기온과 상관없어서"]],
+stack:[["페트병 담·흙 부대 집은 무엇으로 벽을 쌓나요?","버려진 페트병이나 흙 부대에 흙을 채워","새 유리 벽돌","얼음 블록","종이 상자만"],["이 기술의 목적으로 알맞은 것은?","쓰레기를 줄이고 저렴하게 집 짓기","초고층 빌딩 건설","수영장 설치","우주선 제작"],["단열이란?","열이 안팎으로 오가는 것을 막는 것","소리를 크게 하는 것","빛을 모으는 것","물을 얼리는 것"],["흙 부대 집의 장점은?","재료 구하기 쉽고 단열이 잘 된다","전기가 많이 필요","재료가 매우 비싸다","여름에 더 덥다"],["환경적 이점은?","폐기물을 재활용해 쓰레기와 자원을 아낀다","쓰레기가 늘어난다","숲의 벌목이 늘어난다","탄소 배출이 늘어난다"]]};
+
+/* ---------- 상태·저장 ---------- */
+let me="",CODE="",unsub=null,res={},DB=null,U=null,cur=null,over=0,sc=0,DN=0,last=0,gid="",subbed=0;
+const tot=r=>Object.values(r||{}).reduce((a,g)=>a+(g.s||0)+20*(g.q||0),0);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const ls=(k,v)=>{try{return v===undefined?localStorage.getItem(k):localStorage.setItem(k,v)}catch(e){}};
+async function save(){ls("at_res_"+me,JSON.stringify(res));if(DB){try{await DB.collection("classes/"+CODE+"/results").doc(me.replace(/[\/\s]/g,"_")).set({name:me,res,total:tot(res),t:Date.now()})}catch(e){}}}
+function show(id){document.querySelectorAll(".scr").forEach(s=>s.classList.toggle("on",s.id==id));if(id!="play"){cur=null}}
+/* ---------- 소리·효과 ---------- */
+let AC;function beep(f=600,d=.1,t="sine",v=.12){try{AC=AC||new AudioContext();const o=AC.createOscillator(),g=AC.createGain();o.type=t;o.frequency.value=f;g.gain.value=v;g.gain.exponentialRampToValueAtTime(.001,AC.currentTime+d);o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+d)}catch(e){}}
+const win=()=>[523,659,784,1047].forEach((f,i)=>setTimeout(()=>beep(f,.18,"triangle"),i*110));
+let P=[];const cf=$("cf"),cx=cf.getContext("2d");
+function confetti(){cf.width=innerWidth;cf.height=innerHeight;for(let i=0;i<120;i++)P.push({x:innerWidth/2,y:innerHeight/3,vx:(Math.random()-.5)*14,vy:-Math.random()*13,c:`hsl(${Math.random()*360},90%,60%)`,l:1})}
+function cfLoop(){cx.clearRect(0,0,cf.width,cf.height);P.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.35;p.l-=.01;cx.fillStyle=p.c;cx.fillRect(p.x,p.y,7,10)});P=P.filter(p=>p.l>0&&p.y<cf.height);requestAnimationFrame(cfLoop)}cfLoop();
+/* ---------- 그리기 도우미 ---------- */
+const E=(c,s,x,y,z=30,a=1)=>{c.globalAlpha=a;c.font=z+"px serif";c.textAlign="center";c.textBaseline="middle";c.fillText(s,x,y);c.globalAlpha=1};
+const R=(c,f,x,y,w,h)=>{c.fillStyle=f;c.fillRect(x,y,w,h)};
+const C=(c,f,x,y,r)=>{c.fillStyle=f;c.beginPath();c.arc(x,y,r,0,7);c.fill()};
+const T=(c,s,x,y,z=16,f="#234")=>{c.fillStyle=f;c.font="bold "+z+"px sans-serif";c.textAlign="center";c.textBaseline="middle";c.fillText(s,x,y)};
+const bar=(c,v,x,y,w,col)=>{R(c,"#0002",x,y,w,14);R(c,col,x,y,w*Math.min(1,v/100),14)};
+const sco=(t,k)=>Math.round(Math.max(30,150-t*k));
+const tm=()=>Date.now()/1000;
+function sky(c,a,b){const g=c.createLinearGradient(0,0,0,H);g.addColorStop(0,a);g.addColorStop(1,b);c.fillStyle=g;c.fillRect(0,0,W,H)}
+function cloud(c,x,y,s){c.fillStyle="rgba(255,255,255,.85)";[[0,0,18],[16,-6,22],[34,0,17],[16,6,16]].forEach(o=>{c.beginPath();c.arc(x+o[0]*s,y+o[1]*s,o[2]*s,0,7);c.fill()})}
+function clouds(c,n=4){for(let i=0;i<n;i++)cloud(c,((tm()*12+i*140)%(W+120))-60,40+i%2*30,.8+i%3*.2)}
+function sun(c,x=420,y=50){c.save();c.translate(x,y);c.rotate(tm()*.3);c.fillStyle="rgba(255,220,80,.5)";for(let i=0;i<8;i++){c.rotate(.785);c.fillRect(-4,22,8,18)}c.restore();C(c,"#ffd45e",x,y,20)}
+function hills(c,a,b,y=250){c.fillStyle=a;c.beginPath();c.moveTo(0,H);c.lineTo(0,y);c.quadraticCurveTo(120,y-60,240,y-10);c.quadraticCurveTo(360,y-60,W,y-5);c.lineTo(W,H);c.fill();c.fillStyle=b;c.beginPath();c.moveTo(0,H);c.lineTo(0,y+25);c.quadraticCurveTo(160,y-20,320,y+20);c.quadraticCurveTo(420,y,W,y+15);c.lineTo(W,H);c.fill()}
+/* ---------- 게임 5종 ---------- */
+const GAMES={
+bici(){let rpm=0,p=0,a=0,t=0,bub=[];return{
+down(){rpm=Math.min(rpm+14,160);beep(260+rpm*2,.05,"square",.05)},
+upd(d){t+=d;rpm=Math.max(0,rpm-22*d);a+=rpm*d*.12;p=Math.min(100,p+rpm*d*.06);if(rpm>20&&Math.random()<rpm/200)bub.push({x:130+Math.random()*140,y:200,v:-30-Math.random()*40,l:1});bub.forEach(b=>{b.y+=b.v*d;b.l-=d*.7});bub=bub.filter(b=>b.l>0);if(p>=100)return sco(t,2)},
+draw(c){sky(c,"#bfe6ff","#f4fff0");sun(c,455,45);clouds(c,3);hills(c,"#a9dc9a","#7cc47e",275);R(c,"#8d6e4a",0,300,W,20);E(c,"🧺",440,285,30);E(c,"🌼",30,295,22);E(c,"🌷",100,300,20);C(c,"#8fb8dd",200,160,96);C(c,"#fff",200,160,86);
+c.save();c.translate(200,160);c.rotate(a);E(c,"👕",0,0,100);[[-22,-15],[20,8],[-4,28]].forEach(s=>C(c,`rgba(120,70,30,${(1-p/100)*.85})`,s[0],s[1],13));c.restore();
+bub.forEach(b=>C(c,`rgba(100,180,255,${b.l*.7})`,b.x,b.y,6));
+c.strokeStyle="#456";c.lineWidth=4;c.beginPath();c.moveTo(300,160);c.lineTo(380,215);c.stroke();C(c,"#667",380,215,32);c.save();c.translate(380,215);c.rotate(a*1.5);R(c,"#fc4",-30,-3,60,6);R(c,"#fc4",-3,-30,6,60);c.restore();E(c,"🚴",380,150+Math.sin(a*2)*(rpm>5?3:0),56);if(rpm>60)for(let i=0;i<3;i++)E(c,"💨",440,150+i*18,20,.6);
+bar(c,p,20,16,300,"#2e9e5b");T(c,`세탁 ${p|0}%`,380,23,16);T(c,`RPM ${rpm|0}`,70,45,15)}}},
+sock(){let y=60,vy=0,ch=0,cb=0,ms=0,t=0,fin=0;return{
+down(){if(y>190&&vy>0){vy=-420;ch=Math.min(100,ch+6+cb*2);cb++;beep(450+cb*40,.1,"triangle")}else{cb=0;ch=Math.max(0,ch-3);beep(150,.1,"sawtooth")}},
+upd(d){t+=d;vy+=700*d;y+=vy*d;if(y>270){y=270;vy=-300;cb=0;ms++;beep(120,.15,"sawtooth")}if(ch>=100)return Math.max(30,Math.round(150-ms*8-t*.5))},
+draw(c){const k=ch;sky(c,`rgb(${90-k*.8|0},${170-k*1.5|0},${235-k*1.2|0})`,`rgb(${200-k*1.8|0},${235-k*2|0},${250-k*1.6|0})`);if(k<60)clouds(c,3);else for(let i=0;i<25;i++)C(c,"rgba(255,255,255,.8)",(i*97)%W,(i*53)%140,1.4);hills(c,"#4f8f55","#3f7a48",270);
+R(c,"rgba(255,220,80,.25)",0,190,W,95);T(c,"여기서 터치!",240,300,14,"#fff");
+if(ch>=100){const g=c.createRadialGradient(80,200,10,80,200,200);g.addColorStop(0,"rgba(255,240,150,.9)");g.addColorStop(1,"rgba(255,240,150,0)");c.fillStyle=g;c.fillRect(0,0,W,H)}
+E(c,"💡",80,200,ch>=100?64:46,ch>=100?1:.5);E(c,"⚽",300,y,46);E(c,"⚙️",300,y,16,.0);
+R(c,"#fff",330,14,130,26);bar(c,ch,334,20,122,"#3bb15c");T(c,`🔋 ${ch|0}%`,395,52,14,"#fff");T(c,`연속 ${cb}`,60,24,16,"#fff")}}},
+ads(){let r=0,v=50,hold=0,t=0,tg=0;const pick=()=>{tg=Math.random()<.5?10+Math.random()*25:65+Math.random()*25;v=50;hold=0};pick();
+const RS=[["👵","할머니","🌳🐄"],["🧒","학생","📖🔤"],["👨‍🌾","농부","🌾🚜"]];
+const mv=x=>{v=Math.max(0,Math.min(100,(x-40)/4))};
+return{down:mv,move(x){if(DN)mv(x)},
+upd(d){t+=d;if(Math.abs(v-tg)<5){hold+=d;if(hold>=2){win();r++;if(r>=3)return sco(t,1.5);pick()}}else hold=0},
+draw(c){const dd=Math.abs(v-tg),b=dd<5?0:Math.min(26,dd*.45),q=RS[Math.min(r,2)];sky(c,"#fff3c4","#ffe6f0");for(let i=0;i<14;i++)C(c,"rgba(255,255,255,.6)",(i*71+tm()*8)%W,(i*43)%200,6+i%4*3);R(c,"rgba(255,255,255,.75)",90,50,300,150);
+T(c,`${q[0]} ${q[1]}의 시야 (${Math.min(r+1,3)}/3)`,240,24,18);
+if(b==0)E(c,q[2],240,120,90);else for(let k=0;k<12;k++){const a=k/12*6.283;E(c,q[2],240+Math.cos(a)*b,120+Math.sin(a)*b,90,.14)}
+R(c,"#cde",40,250,400,10);R(c,"#2e9e5b",40,250,Math.min(1,hold/2)*400,10);T(c,"선명해지는 곳을 찾아 2초 유지!",240,232,13);
+E(c,"💉",40+v*4,285,40);T(c,"◀ 액체 줄이기",90,310,12);T(c,"액체 늘리기 ▶",390,310,12)}}},
+warka(){let x=240,w=0,D=[],sp=0,t=0;return{
+move(px){x=Math.max(45,Math.min(W-45,px))},down(px){x=Math.max(45,Math.min(W-45,px))},
+upd(d){t+=d;sp-=d;if(sp<=0){sp=.42;D.push({x:30+Math.random()*420,y:-10,bad:Math.random()<.2})}
+D.forEach(o=>{o.y+=130*d;if(!o.dead&&o.y>235&&o.y<265&&Math.abs(o.x-x)<50){o.dead=1;w=Math.max(0,w+(o.bad?-3:4));beep(o.bad?140:700+w*3,.1,o.bad?"sawtooth":"sine")}});D=D.filter(o=>!o.dead&&o.y<330);if(w>=100)return sco(t,1.5)},
+draw(c,ov){sky(c,"#8fc9ee","#e8f6ff");sun(c,430,50);clouds(c,4);hills(c,"#e3c88f","#d8b878",268);E(c,"🌵",40,285,30);E(c,"🌴",450,280,34);
+D.forEach(o=>o.bad?E(c,"🟤",o.x,o.y,20):E(c,"💧",o.x,o.y,24));
+R(c,"#7a5a30",x-40,250,5,35);R(c,"#7a5a30",x+35,250,5,35);R(c,"#fff8",x-45,238,90,14);c.strokeStyle="#357";c.lineWidth=1;for(let i=0;i<9;i++){c.beginPath();c.moveTo(x-45+i*11,238);c.lineTo(x-45+i*11,252);c.stroke()}
+R(c,"#fff",14,14,170,24);bar(c,w,18,19,162,"#2d7fd3");T(c,`💧 ${w|0} / 100 L`,100,52,15);
+if(ov)for(let i=0;i<4;i++)E(c,i%2?"🧑‍🌾":"👧",100+i*90,270-Math.abs(Math.sin(Date.now()/150+i))*30,36)}}},
+stack(){let b=[{x:140,w:200}],x=0,dir=1,w=200,tr=3,sum=0,sp=140,dn=null,wl=0;
+return{down(){if(dn!=null)return;const tp=b[b.length-1],l=Math.max(x,tp.x),r=Math.min(x+w,tp.x+tp.w),ov=r-l;
+if(ov<8){tr--;beep(120,.2,"sawtooth");x=0;if(tr<=0)dn=30;return}
+sum+=ov/w;b.push({x:l,w:ov});w=ov;sp+=12;beep(300+b.length*50,.1,"triangle");if(b.length>=9)dn=Math.max(30,Math.round(40+110*sum/8-(3-tr)*10))},
+upd(d){wl+=d;if(dn!=null)return dn;x+=dir*sp*d;if(x<0){x=0;dir=1}if(x+w>W){x=W-w;dir=-1}},
+draw(c,ov){sky(c,"#c6e9ff","#f6fff1");sun(c,440,45);clouds(c,3);hills(c,"#a9dc9a","#8cc67f",270);R(c,"#9a7b4f",0,300,W,20);E(c,"🌳",40,278,40);E(c,"🌳",445,280,36);b.forEach((o,i)=>{R(c,i%2?"#8fd19e":"#b7e3ff",o.x,300-24*(i+1),o.w,24);for(let k=o.x+11;k<o.x+o.w-6;k+=22)C(c,"#2d7fd3",k,300-24*(i+1)+12,5);c.strokeStyle="#357";c.strokeRect(o.x,300-24*(i+1),o.w,24)});
+if(!ov){R(c,"#ffd45e",x,300-24*(b.length+1),w,24);T(c,"❤️".repeat(Math.max(0,tr)),60,20,18);T(c,`${b.length-1}/8층`,420,20,16)}
+else{const bx=b[b.length-1].x,ex=bx+b[b.length-1].w;for(let i=0;i<8;i++){const yy=110+i*24,px=((wl*220+i*60)%(bx+60));E(c,"🥶",Math.min(px,bx-14),yy,16)}
+T(c,"단열 테스트: 찬바람을 막아냈어요!",240,50,16);T(c,"🏠 실내 온도 20℃ 유지 🌡️",240,80,16)}}}}};
+/* ---------- 게임 진행 ---------- */
+const cv=$("cv"),ctx=cv.getContext("2d");
+function pos(e){const r=cv.getBoundingClientRect();return[(e.clientX-r.left)*W/r.width,(e.clientY-r.top)*H/r.height]}
+cv.addEventListener("pointerdown",e=>{DN=1;if(cur&&cur.down)cur.down(...pos(e));if(AC&&AC.state=="suspended")AC.resume()});
+cv.addEventListener("pointermove",e=>{if(cur&&cur.move)cur.move(...pos(e))});
+addEventListener("pointerup",()=>DN=0);
+addEventListener("keydown",e=>{if(e.code=="Space"&&cur){e.preventDefault();if(cur.down)cur.down(240,200)}});
+function loop(ts){if(!cur)return;const d=Math.min(.05,(ts-last)/1000);last=ts;
+if(!over){const s=cur.upd(d);if(s!=null){over=1;sc=s;confetti();win();setTimeout(()=>{if(cur)fin(sc)},2200)}}
+cur.draw(ctx,over);requestAnimationFrame(loop)}
+function begin(id){gid=id;const g=GM.find(x=>x.id==id);show("play");$("hint").textContent=g.h;over=0;cur=GAMES[id]();last=performance.now();requestAnimationFrame(loop)}
+function fin(s){const old=res[gid]||{};res[gid]={s:Math.max(old.s||0,s),q:old.q||0,tried:1};cur=null;ask(gid,s)}
+/* ---------- 퀴즈 ---------- */
+function ask(id,s){const qs=Q[id].map(a=>({q:a[0],o:[a[1],a[2],a[3],a[4]].map((t,i)=>({t,ok:!i})).sort(()=>Math.random()-.5)}));let i=0,ok=0;show("quiz");
+const step=()=>{const Z=$("quiz");if(i>=5){const o=res[id];o.q=Math.max(o.q||0,ok);save();menu();
+Z.innerHTML=`<h2>🎉 ${GM.find(x=>x.id==id).n} 완료!</h2><div class="box">게임 점수 <b>${s}점</b><br>퀴즈 <b>${ok}/5</b> 정답 (+${ok*20}점)<br>이번 획득 <b>${s+ok*20}점</b></div><p id="sd" class="mut"></p><p class="mut">👩‍🏫 선생님께 제출할 결과 코드 (클릭 후 복사):</p><textarea id="rc" readonly rows="3" style="width:100%" onclick="this.select()">${mk()}</textarea><button id="m">메뉴로</button>`;send();$("m").onclick=()=>show("menu");if(ok==5){confetti();win()}return}
+const q=qs[i];Z.innerHTML=`<h2>📝 원리·목적 퀴즈 ${i+1}/5</h2><p class="q">${q.q}</p>`+q.o.map((o,k)=>`<button class="opt" data-k="${k}">${o.t}</button>`).join("");
+Z.querySelectorAll(".opt").forEach(bt=>bt.onclick=()=>{const k=+bt.dataset.k;Z.querySelectorAll(".opt").forEach((x,j)=>{x.disabled=1;if(q.o[j].ok)x.classList.add("good")});if(q.o[k].ok){ok++;beep(880,.15,"triangle")}else{bt.classList.add("bad");beep(160,.25,"sawtooth")}setTimeout(()=>{i++;step()},1100)})};step()}
+/* ---------- 메뉴·교사 ---------- */
+function menu(){$("cards").innerHTML=GM.map(g=>{const r=res[g.id];return`<button class="card${r?" done":""}" data-id="${g.id}"><span class="ic">${g.n.split(" ")[0]}</span><b>${g.n.split(" ").slice(1).join(" ")}</b><small>${g.s}</small><br><small>${r?`✅ ${r.s}점 · 퀴즈 ${r.q||0}/5`:"아직 도전 전"}</small></button>`}).join("");
+document.querySelectorAll(".card").forEach(b=>b.onclick=()=>{const g=GM.find(x=>x.id==b.dataset.id);gid=g.id;$("it").textContent=g.n+" · 적정기술 배움터";$("ii").innerHTML=g.i;show("intro")});
+$("tot").textContent=`내 총점: ${tot(res)}점`}
+function rank(rows){rows=rows.map(r=>({...r,total:tot(r.res)})).sort((a,b)=>b.total-a.total);const M=["🥇","🥈","🥉"];
+let h=`<table><tr><th>순위</th><th>이름</th>${GM.map(g=>`<th>${g.n.split(" ")[0]}<br><small>${g.s}</small></th>`).join("")}<th>합계</th></tr>`;
+rows.forEach((r,i)=>{h+=`<tr><td>${M[i]||i+1}</td><td>${esc(r.name)}</td>${GM.map(g=>{const x=(r.res||{})[g.id];return`<td>${x?`${x.s}점<br><small>퀴즈 ${x.q||0}/5</small>`:"-"}</td>`}).join("")}<td><b>${r.total}</b></td></tr>`});
+h+=`<tr><td colspan="2"><b>퀴즈 정답률</b></td>${GM.map(g=>{const a=rows.filter(r=>(r.res||{})[g.id]);const p=a.length?Math.round(a.reduce((s,r)=>s+(r.res[g.id].q||0),0)/(a.length*5)*100):0;return`<td>${a.length?p+"%":"-"}</td>`}).join("")}<td>${rows.length}명</td></tr></table>`;
+$("tb").innerHTML=rows.length?h:"<p class='mut'>아직 제출된 결과가 없어요.</p>"}
+function teacher(){if(!DB){let p=ls("at_pin");if(!p){p=prompt("교사 비밀번호를 정하세요 (처음 입력한 값이 이 기기에 저장됩니다)");if(!p)return;ls("at_pin",p)}else if(prompt("교사 비밀번호")!=p)return}show("teacher");$("fl").value=FL();$("fmsg").textContent=FL()?"✅ 연동됨":"";if(DB){$("cp").hidden=false;$("tc").value=$("tc").value||ls("at_tcode")||"";watch()}else{$("cp").hidden=false;$("cs").hidden=false;$("cu").value=ls("at_csv")||"";$("tc").value=$("tc").value||ls("at_tcode")||"";watch()}}
+function watch(){const c=$("tc").value.toUpperCase().replace(/[^A-Z0-9]/g,"");if(!c&&DB){$("tb").innerHTML="<p class='mut'>수업 코드를 만들거나 입력하세요.</p>";return}ls("at_tcode",c);$("tc").value=c;$("big").textContent=c;if(unsub)unsub();clearInterval(tmr);if(DB){unsub=DB.collection("classes/"+c+"/results").onSnapshot(s=>rank(s.docs.map(d=>d.data())),()=>{$("tb").textContent="결과를 불러오지 못했어요."})}else{pull();if(ls("at_csv"))tmr=setInterval(pull,10000)}}
+$("nc").onclick=()=>{$("tc").value=Math.random().toString(36).slice(2,6).toUpperCase();watch()};$("sc").onclick=watch;
+let tmr=null,CSV="";
+function parseCSV(t){const r=[];let row=[],c="",q=0;for(let i=0;i<t.length;i++){const h=t[i];if(q){if(h=='"'){if(t[i+1]=='"'){c+='"';i++}else q=0}else c+=h}else if(h=='"')q=1;else if(h==","){row.push(c);c=""}else if(h=="\n"||h=="\r"){if(h=="\r"&&t[i+1]=="\n")i++;row.push(c);r.push(row);row=[];c=""}else c+=h}if(c||row.length){row.push(c);r.push(row)}return r}
+function fromCSV(t){const code=$("tc").value.toUpperCase().replace(/[^A-Z0-9]/g,""),m={};parseCSV(t.replace(/^\uFEFF/,"")).slice(1).filter(r=>r.length>=10&&(!code||(r[1]||"").trim().toUpperCase()==code)).forEach(r=>{const o={};GM.forEach((g,i)=>{const[s,q]=(r[5+i]||"0/0").split("/");if(+s||+q)o[g.id]={s:+s||0,q:+q||0}});const n=(r[2]||"").trim();if(n&&(!m[n]||tot(o)>=tot(m[n])))m[n]=o});rank(Object.keys(m).map(n=>({name:n,res:m[n]})));$("cm").textContent="✅ "+Object.keys(m).length+"명 · "+new Date().toLocaleTimeString()+" 갱신"}
+function pull(){const u=ls("at_csv");if(u){fetch(u).then(r=>r.text()).then(t=>{CSV=t;fromCSV(t)}).catch(()=>{$("tb").innerHTML="<p class='mut'>⚠️ 시트를 불러오지 못했어요. 게시 주소를 확인하세요.</p>"})}else if(CSV)fromCSV(CSV);else $("tb").innerHTML="<p class='mut'>응답 시트(CSV)를 불러와 주세요.</p>"}
+$("cb").onclick=()=>{ls("at_csv",$("cu").value.trim());$("cm").textContent="불러오는 중…";watch()};
+$("cf2").onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{ls("at_csv","");CSV=t;$("cm").textContent="✅ 파일을 불러왔어요";watch()})};
+function chk(l){try{const u=new URL(l);if(!/docs\.google\.com\/forms\/d\/e\//.test(u.href))return"구글 폼 주소가 아니에요";const n=[...u.searchParams.keys()].filter(k=>k.startsWith("entry.")).length;if(n<9)return"⚠️ 입력 칸 정보("+n+"/9)가 없어요. 폼에서 ⋮ → '미리 채워진 링크 가져오기'로 9칸을 모두 채운 링크를 넣어 주세요";return""}catch(e){return"주소 형식이 올바르지 않아요"}}
+$("fs").onclick=()=>{const l=$("fl").value.trim(),m=chk(l);$("fmsg").textContent=m||"✅ 연동 저장 완료! (이 기기에 저장됨) 학생용 파일을 만들어 배포하세요.";if(!m)ls("at_form",l)};
+$("fd").onclick=()=>{const l=$("fl").value.trim()||FL(),m=chk(l);if(m){$("fmsg").textContent=m;return}const h="<!DOCTYPE html>\n"+SRC.replace(/^const FORM_LINK="[^"]*";/m,()=>'const FORM_LINK="'+l.replace(/"/g,"%22")+'";');const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([h],{type:"text/html"}));a.download="적정기술게임_학생용.html";a.click();$("fmsg").textContent="📥 학생용 파일이 내려받아졌어요. 이 파일을 학생들에게 배포하세요."};
+function send(){const el=$("sd"),say=t=>{if(el)el.textContent=t};if(!FL())return;try{const u=new URL(FL()),en=[...u.searchParams.keys()].filter(k=>k.startsWith("entry."));if(en.length<9){say("⚠️ 구글 폼 항목이 9개 필요해요");return}
+const v=[CODE,me,tot(res),GM.reduce((a,g)=>a+((res[g.id]||{}).q||0),0),...GM.map(g=>{const r=res[g.id]||{};return(r.s||0)+"/"+(r.q||0)})];const b=new URLSearchParams();en.forEach((k,i)=>{if(i<9)b.append(k,v[i])});
+say("📨 결과 전송 중…");fetch(u.origin+u.pathname.replace(/\/viewform.*$/,"")+"/formResponse",{method:"POST",mode:"no-cors",body:b}).then(()=>say("📨 선생님께 결과를 전송했어요!")).catch(()=>say("⚠️ 전송 실패 – 인터넷 연결을 확인하세요"))}catch(e){say("⚠️ 구글 폼 주소를 확인하세요")}}
+function mk(){try{return btoa(unescape(encodeURIComponent(JSON.stringify({n:me,r:res}))))}catch(e){return""}}
+function loc(){const m={};try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k.startsWith("at_res_"))m[k.slice(7)]=JSON.parse(localStorage.getItem(k))}Object.assign(m,JSON.parse(ls("at_roster")||"{}"))}catch(e){}rank(Object.keys(m).map(n=>({name:n,res:m[n]})))}
+$("ad").onclick=()=>{const R0=JSON.parse(ls("at_roster")||"{}");let n=0;$("cd").value.split(/\s+/).filter(Boolean).forEach(s=>{try{const o=JSON.parse(decodeURIComponent(escape(atob(s))));if(o.n){const a=R0[o.n]||{};Object.keys(o.r).forEach(k=>{const x=a[k]||{},y=o.r[k];a[k]={s:Math.max(x.s||0,y.s||0),q:Math.max(x.q||0,y.q||0)}});R0[o.n]=a;n++}}catch(e){}});ls("at_roster",JSON.stringify(R0));$("cd").value="";loc();alert(n+"명의 결과를 반영했어요")};
+$("tbtn").onclick=teacher;$("bk1").onclick=()=>show("menu");$("bk2").onclick=()=>{cur=null;show("menu")};$("bk3").onclick=()=>show("menu");$("go").onclick=()=>begin(gid);
+function enter(n){me=n.trim();if(!me)return;CODE=$("cc").value.toUpperCase().replace(/[^A-Z0-9]/g,"");if((DB||FL())&&!CODE){alert("수업 코드를 입력하세요");return}ls("at_cc",CODE);ls("at_me",me);try{res=JSON.parse(ls("at_res_"+me)||"{}")}catch(e){res={}}$("who").textContent="👤 "+me+(CODE?" · "+CODE:"");menu();show("menu");
+if(DB){DB.collection("classes/"+CODE+"/results").doc(me.replace(/[\/\s]/g,"_")).get().then(d=>{if(d.exists){const r=d.data().res||{};Object.keys(r).forEach(k=>{const o=res[k]||{};res[k]={s:Math.max(o.s||0,r[k].s||0),q:Math.max(o.q||0,r[k].q||0)}});menu()}}).catch(()=>{})}}
+$("lg").onclick=()=>enter($("nm").value);$("nm").onkeydown=e=>{if(e.key=="Enter")enter($("nm").value)};$("nm").value=ls("at_me")||"";$("cc").value=ls("at_cc")||"";
+(async()=>{try{if(typeof claude=="undefined"){$("st").textContent=FL()?"📊 구글 폼 연동됨":"💾 이 기기에만 저장 (자동 집계 안 됨)";$("tbtn").hidden=false;return}const[d,u]=await Promise.all([claude.use("db"),claude.use("user")]);DB=d;U=u;$("st").textContent=d?"☁️ 실시간 집계 연결됨":"💾 이 기기에만 저장 (자동 집계 안 됨)";if(!d||!u||await u.canEdit())$("tbtn").hidden=false}catch(e){$("st").textContent="💾 이 기기에만 저장 (자동 집계 안 됨)";$("tbtn").hidden=false}})();
+</script></body></html>
